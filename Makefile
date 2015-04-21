@@ -1,7 +1,14 @@
-PDF=slides.pdf
-TEX=slides.tex
+LTX=slides.ltx
+LTXMAIN=$(basename $(LTX))
+FMT=$(subst .ltx,.fmt,$(LTX))
+PDF=$(subst .ltx,.pdf,$(LTX))
+TEX=$(subst .ltx,.tex,$(LTX))
+LOG=$(subst .ltx,.log,$(LTX))
 
 default : $(PDF)
+
+$(TEX) : $(LTX) $(FMT)
+	lhs2TeX $(LTX) > $(TEX)
 
 preview : $(PDF)
 	@if [ `uname` = 'Darwin' ]; then \

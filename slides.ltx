@@ -4,6 +4,8 @@
 \usecolortheme{dolphin}
 \setbeamertemplate{navigation symbols}{} 
 
+%include slides.fmt
+
 \usepackage{color}
 
 %% Encoding, font stuff
@@ -14,6 +16,8 @@
 
 %% Symbols and whatever
 \usepackage{amsmath,amsthm,amssymb,stmaryrd}
+
+\usepackage{alltt}
 
 %% Layout stuff and other related goodies.
 \usepackage[parfill]{parskip}
@@ -96,5 +100,69 @@
 \maketitle
 \end{frame}
 
+\begin{frame}{\Hits versus \oits}
+Ordinary inductive types:
+\begin{code}
+  data T : Type where
+    c0  : F0 T -> T
+        vdots
+    ck  : Fk T -> T
+\end{code}
+
+where every |Fi : Type -> Type| is a (strictly positive) functor.
+\end{frame}
+
+\begin{frame}{\Hits versus \oits}
+Ordinary inductive types:
+\begin{code}
+  data T : Type where
+    c  : F0 T + hdots + Fk T -> T
+\end{code}
+
+where every |Fi : Type -> Type| is a (strictly positive) functor.
+\end{frame}
+
+\begin{frame}{\Hits versus \oits}
+Ordinary inductive types:
+\begin{code}
+  data T : Type where
+    c  : F T -> T
+\end{code}
+
+where |F : Type -> Type| is a (strictly positive) functor.
+\end{frame}
+
+\begin{frame}{\Hits versus \oits}
+  Higher inductive types:
+
+  We can have dependencies between constructors:
+
+  \begin{code}
+    data T2 : Type where
+      base : T2
+      p : base = base
+      q : base = base
+      t : p * q = q * p
+  \end{code}
+
+  This can no longer be described by just a single functor |Type ->
+  Type|.
+\end{frame}
+
+\begin{frame}{General framework}
+  In general, we want to talk about inductive definitions of the form:
+
+  \begin{code}
+    data T : Type
+      c0 : (x : F0 T)                     -> G0 T x
+         vdots
+      ck : (x : Fk (T, c0, hdots, ckmo))  -> Gk (T, c0, hdots, ckmo) x
+  \end{code}
+
+\end{frame}
+
+\begin{frame}{Strict positivity}
+  We can't allow any arguments functor: it has to be strictly positive.
+\end{frame}
 
 \end{document}

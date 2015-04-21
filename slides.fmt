@@ -1,0 +1,10 @@
+%include polycode.fmt
+
+%format vdots  = " \vdots "
+%format hdots  = " \hdots "
+%format c0 = " c_0 "
+%format ck = " c_k "
+%format ckmo = " c_{k-1} "
+%format F0 = " F_0 "
+%format Fk = " F_k "
+%format Fi = " F_i "
