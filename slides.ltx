@@ -100,6 +100,10 @@
 \maketitle
 \end{frame}
 
+\begin{frame}{Goal}
+  Our goal is to understand \hits a tiny bit better.
+\end{frame}
+
 \begin{frame}{\Hits versus \oits}
 Ordinary inductive types:
 \begin{code}
@@ -135,8 +139,6 @@ where |F : Type -> Type| is a (strictly positive) functor.
 \begin{frame}{\Hits versus \oits}
   Higher inductive types:
 
-  We can have dependencies between constructors:
-
   \begin{code}
     data T2 : Type where
       base : T2
@@ -145,12 +147,17 @@ where |F : Type -> Type| is a (strictly positive) functor.
       t : p * q = q * p
   \end{code}
 
-  This can no longer be described by just a single functor |Type ->
-  Type|.
+  \begin{itemize}
+  \item Dependencies on previous constructors
+  \item \emph{Higher} constructors: target of constructors isn't just
+    |T|, but can also be an iterated path space of |T|.
+  \end{itemize}
+
+  Single functor |Type -> Type| no longer suffices
 \end{frame}
 
 \begin{frame}{General framework}
-  In general, we want to talk about inductive definitions of the form:
+  In general: constructors are \emph{dependent dialgebras}:
 
   \begin{code}
     data T : Type
@@ -159,10 +166,203 @@ where |F : Type -> Type| is a (strictly positive) functor.
       ck : (x : Fk (T, c0, hdots, ckmo))  -> Gk (T, c0, hdots, ckmo) x
   \end{code}
 
+  We will call:
+
+  \begin{itemize}
+  \item Every |Fi| an \emph{arguments} functor
+  \item Every |Gi| a \emph{target} functor
+  \end{itemize}
 \end{frame}
 
-\begin{frame}{Strict positivity}
-  We can't allow any arguments functor: it has to be strictly positive.
+\begin{frame}{General framework}
+  In general: constructors are \emph{dependent dialgebras}:
+
+  \begin{code}
+    c : (x : F X) -> G X x
+  \end{code}
+
+  where 
+
+  \begin{itemize}
+  \item |F : C -> Type|
+  \item |G : int C F -> Type|
+  \item |C : Cat| with an adjunction |L dashv U : C -> Type|
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}{General framework -- higher constructors}
+  In general: constructors are \emph{dependent dialgebras}:
+
+  \begin{code}
+    c : (x : F X) -> G X x
+  \end{code}
+
+  where 
+
+  \begin{itemize}
+  \item |C : Cat| with an adjunction |L dashv U : C -> Type|
+  \item |F : C -> Type|
+  \item |G : int C F -> Type|
+  \end{itemize}
+
+  \begin{code}
+    G (X, x) ddefeq hdots
+  \end{code}
+
+
+\end{frame}
+
+\begin{frame}{General framework -- \oneconstructors}
+  In general: constructors are \emph{dependent dialgebras}:
+
+  \begin{code}
+    c : (x : F X) -> hdots eqUX hdots
+  \end{code}
+
+  where 
+
+  \begin{itemize}
+  \item |C : Cat| with an adjunction |L dashv U : C -> Type|
+  \item |F : C -> Type|
+  \item |G : int C F -> Type|
+  \end{itemize}
+
+  \begin{code}
+    G (X, x) ddefeq hdots
+  \end{code}
+
+\end{frame}
+
+\begin{frame}{General framework -- \oneconstructors}
+  In general: constructors are \emph{dependent dialgebras}:
+
+  \begin{code}
+    c : (x : F X) -> l X x eqUX r X x
+  \end{code}
+
+  where 
+
+  \begin{itemize}
+  \item |C : Cat| with an adjunction |L dashv U : C -> Type|
+  \item |F : C -> Type|
+  \item |l r : F -> U|
+  \item |Eq0 : int C F -> Type|
+  \end{itemize}
+
+  \begin{code}
+    Eq0 (X, x) ddefeq (l X x eqUX r X x)
+  \end{code}
+
+\end{frame}
+
+\begin{frame}{General framework -- \twoconstructors}
+  For \twoconstructors:
+
+  \begin{code}
+    c : (x : F X) -> l1 X x eq0 r1 X x
+  \end{code}
+
+  where 
+
+  \begin{itemize}
+  \item |C : Cat| with an adjunction |L dashv U : C -> Type|
+  \item |F : C -> Type|
+  \item |l0 r0 : F -> U|
+  \item |Eq0 : int C F -> Type| \\
+        |Eq0 (X, x) ddefeq (l X x eqUX r X x)|
+  \item |l1 r1 : 1 -> Eq0|
+  \end{itemize}
+
+  \begin{code}
+    Eq1 : int C F -> Type
+    Eq1 (X, x) ddefeq (l1 X x eq0 r1 X x)
+  \end{code}
+
+  \begin{code}
+
+  \end{code}
+
+\end{frame}
+
+\begin{frame}{Strict positivity -- \oits}
+  We can't allow any arguments functor: it has to be strictly positive:
+
+  \begin{code}
+    data Tm : Type where
+      lam : (Tm -> Tm) -> Tm 
+  \end{code}
+
+\end{frame}
+
+\begin{frame}{Strict positivity -- \hits}
+  We can't allow any arguments functor: it has to be strictly positive:
+
+  \begin{code}
+    data InitialField : Type where
+      0 : InitialField
+      1 : InitialField
+      _+_ : InitialField -> InitialField -> InitialField
+      _*_ : InitialField -> InitialField -> InitialField
+      vdots
+      inv : (x : InitialField) -> (x = 0 -> bot) -> InitialField
+      vdots
+  \end{code}
+
+  does not exist: |inv| is not strictly positive
+\end{frame}
+
+
+\begin{frame}{Strict positivity -- generalised containers}
+  Strictly positive functors: \emph{ordinary} containers:
+
+  \begin{itemize}
+  \item Shapes |S : Type|
+  \item Positions |T : S -> Type|
+  \end{itemize}
+
+  |sem(S lhd P) : Type -> Type| \\
+  |sem(S lhd P) X ddefeq (s : S) times (P s -> X)|
+  
+\end{frame}
+
+\begin{frame}{Strict positivity -- generalised containers}
+  Strictly positive functors: \emph{generalised} containers:
+
+  \begin{itemize}
+  \item Shapes |S : Type|
+  \item Positions |T : S -> / C / |
+  \end{itemize}
+
+  |sem(S lhd P) : C -> Type| \\
+  |sem(S lhd P) X ddefeq (s : S) times C(P s, X)|
+    
+  \begin{itemize}
+  \item Container morphisms: natural transformations
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Strict positivity -- generalised containers}
+  It is reasonable to require that the argument functors |Fi| be
+  containers.
+
+  Are the |Eqi| containers?
+\end{frame}
+
+\begin{frame}{Coherence problems}
+  \begin{itemize}
+  \item We can use generalised containers to internalise the theory
+  \item We still need to be able to talk about the categories of dependent dialgebras
+  \item $\hdots$ but this comes with coherence problems
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Conclusions}
+  \begin{itemize}
+  \item Generalised containers get us far
+  \item Defining categories is a problem
+  \end{itemize}
+
 \end{frame}
 
 \end{document}
