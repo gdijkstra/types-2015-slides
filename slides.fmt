@@ -31,3 +31,6 @@
 %format / = " | "
 %format inv = " \_^{-1} "
 %format bot = " \bot "
+%format catC = " \mathcal{C} "
+%format ADD = " \_\!+\!\_ "
+%format MUL = " \_\!*\!\_ "

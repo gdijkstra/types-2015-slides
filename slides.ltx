@@ -80,15 +80,15 @@
 \and
   Paolo Capriotti\inst{1}
 \and
-  Gabe Dijkstra\inst{1}\\
+  \emph{Gabe Dijkstra}\inst{1}\\
 \and
   Fredrik Nordvall Forsberg\inst{2}
 }
 
 \institute[]{
-  Nottingham University
+  \inst{1} University of Nottingham
 \and
-  University of Strathclyde
+  \inst{2} University of Strathclyde
  }
 
 \date{\today}
@@ -101,7 +101,7 @@
 \end{frame}
 
 \begin{frame}{Goal}
-  Our goal is to understand \hits a tiny bit better.
+  |hdots|
 \end{frame}
 
 \begin{frame}{\Hits versus \oits}
@@ -144,12 +144,12 @@ where |F : Type -> Type| is a (strictly positive) functor.
       base : T2
       p : base = base
       q : base = base
-      t : p * q = q * p
+      t : p trans q = q trans p
   \end{code}
 
   \begin{itemize}
   \item Dependencies on previous constructors
-  \item \emph{Higher} constructors: target of constructors isn't just
+  \item \emph{Higher} constructors: target of constructors not always
     |T|, but can also be an iterated path space of |T|.
   \end{itemize}
 
@@ -175,46 +175,46 @@ where |F : Type -> Type| is a (strictly positive) functor.
 \end{frame}
 
 \begin{frame}{General framework}
-  In general: constructors are \emph{dependent dialgebras}:
+  Constructors are \emph{dependent dialgebras}:
 
   \begin{code}
-    c : (x : F X) -> G X x
+    c : (x : F X) -> G (X, x)
   \end{code}
 
   where 
 
   \begin{itemize}
-  \item |F : C -> Type|
-  \item |G : int C F -> Type|
-  \item |C : Cat| with an adjunction |L dashv U : C -> Type|
+  \item |catC : Cat| with an adjunction |L dashv U : catC -> Type|
+  \item |F : catC -> Type|
+  \item |G : int catC F -> Type|
   \end{itemize}
 
 \end{frame}
 
-\begin{frame}{General framework -- higher constructors}
-  In general: constructors are \emph{dependent dialgebras}:
+\begin{frame}{General framework -- \zeroconstructors}
+  \zeroconstructors are \emph{dependent dialgebras}:
 
   \begin{code}
-    c : (x : F X) -> G X x
+    c : (x : F X) -> G (X, x)
   \end{code}
 
   where 
 
   \begin{itemize}
-  \item |C : Cat| with an adjunction |L dashv U : C -> Type|
-  \item |F : C -> Type|
-  \item |G : int C F -> Type|
+  \item |C : Cat| with an adjunction |L dashv U : catC -> Type|
+  \item |F : catC -> Type|
+  \item |G : int catC F -> Type|
   \end{itemize}
 
   \begin{code}
-    G (X, x) ddefeq hdots
+    G (X, x) ddefeq X
   \end{code}
 
 
 \end{frame}
 
 \begin{frame}{General framework -- \oneconstructors}
-  In general: constructors are \emph{dependent dialgebras}:
+  \oneconstructors are \emph{dependent dialgebras}:
 
   \begin{code}
     c : (x : F X) -> hdots eqUX hdots
@@ -223,19 +223,19 @@ where |F : Type -> Type| is a (strictly positive) functor.
   where 
 
   \begin{itemize}
-  \item |C : Cat| with an adjunction |L dashv U : C -> Type|
-  \item |F : C -> Type|
-  \item |G : int C F -> Type|
+  \item |C : Cat| with an adjunction |L dashv U : catC -> Type|
+  \item |F : catC -> Type|
+  \item |G : int catC F -> Type|
   \end{itemize}
 
   \begin{code}
-    G (X, x) ddefeq hdots
+    G (X, x) ddefeq (hdots eqUX hdots)
   \end{code}
 
 \end{frame}
 
 \begin{frame}{General framework -- \oneconstructors}
-  In general: constructors are \emph{dependent dialgebras}:
+  \oneconstructors are \emph{dependent dialgebras}:
 
   \begin{code}
     c : (x : F X) -> l X x eqUX r X x
@@ -244,10 +244,10 @@ where |F : Type -> Type| is a (strictly positive) functor.
   where 
 
   \begin{itemize}
-  \item |C : Cat| with an adjunction |L dashv U : C -> Type|
-  \item |F : C -> Type|
+  \item |C : Cat| with an adjunction |L dashv U : catC -> Type|
+  \item |F : catC -> Type|
   \item |l r : F -> U|
-  \item |Eq0 : int C F -> Type|
+  \item |Eq0 : int catC F -> Type|
   \end{itemize}
 
   \begin{code}
@@ -266,16 +266,16 @@ where |F : Type -> Type| is a (strictly positive) functor.
   where 
 
   \begin{itemize}
-  \item |C : Cat| with an adjunction |L dashv U : C -> Type|
-  \item |F : C -> Type|
+  \item |C : Cat| with an adjunction |L dashv U : catC -> Type|
+  \item |F : catC -> Type|
   \item |l0 r0 : F -> U|
-  \item |Eq0 : int C F -> Type| \\
+  \item |Eq0 : int catC F -> Type| \\
         |Eq0 (X, x) ddefeq (l X x eqUX r X x)|
   \item |l1 r1 : 1 -> Eq0|
   \end{itemize}
 
   \begin{code}
-    Eq1 : int C F -> Type
+    Eq1 : int catC F -> Type
     Eq1 (X, x) ddefeq (l1 X x eq0 r1 X x)
   \end{code}
 
@@ -289,8 +289,8 @@ where |F : Type -> Type| is a (strictly positive) functor.
   We can't allow any arguments functor: it has to be strictly positive:
 
   \begin{code}
-    data Tm : Type where
-      lam : (Tm -> Tm) -> Tm 
+    data Term : Type where
+      lam : (Term -> Term) -> Term 
   \end{code}
 
 \end{frame}
@@ -300,10 +300,10 @@ where |F : Type -> Type| is a (strictly positive) functor.
 
   \begin{code}
     data InitialField : Type where
-      0 : InitialField
-      1 : InitialField
-      _+_ : InitialField -> InitialField -> InitialField
-      _*_ : InitialField -> InitialField -> InitialField
+      0  : InitialField
+      1  : InitialField
+      ADD  : InitialField -> InitialField -> InitialField
+      MUL  : InitialField -> InitialField -> InitialField
       vdots
       inv : (x : InitialField) -> (x = 0 -> bot) -> InitialField
       vdots
@@ -313,8 +313,8 @@ where |F : Type -> Type| is a (strictly positive) functor.
 \end{frame}
 
 
-\begin{frame}{Strict positivity -- generalised containers}
-  Strictly positive functors: \emph{ordinary} containers:
+\begin{frame}{Strict positivity -- |catC|-containers}
+  Strictly positive functors |Type -> Type|: containers:
 
   \begin{itemize}
   \item Shapes |S : Type|
@@ -326,15 +326,15 @@ where |F : Type -> Type| is a (strictly positive) functor.
   
 \end{frame}
 
-\begin{frame}{Strict positivity -- generalised containers}
-  Strictly positive functors: \emph{generalised} containers:
+\begin{frame}{Strict positivity -- |catC|-containers}
+  Strictly positive functors |catC -> Type|: |catC|-containers
 
   \begin{itemize}
   \item Shapes |S : Type|
-  \item Positions |T : S -> / C / |
+  \item Positions |T : S -> / catC / |
   \end{itemize}
 
-  |sem(S lhd P) : C -> Type| \\
+  |sem(S lhd P) : catC -> Type| \\
   |sem(S lhd P) X ddefeq (s : S) times C(P s, X)|
     
   \begin{itemize}
@@ -342,16 +342,16 @@ where |F : Type -> Type| is a (strictly positive) functor.
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Strict positivity -- generalised containers}
+\begin{frame}{Strict positivity -- |catC|-containers}
   It is reasonable to require that the argument functors |Fi| be
   containers.
 
-  Are the |Eqi| containers?
+  Are the |Eqi| functors expressible as containers?
 \end{frame}
 
 \begin{frame}{Coherence problems}
   \begin{itemize}
-  \item We can use generalised containers to internalise the theory
+  \item We can use |catC|-containers to internalise the theory
   \item We still need to be able to talk about the categories of dependent dialgebras
   \item $\hdots$ but this comes with coherence problems
   \end{itemize}
@@ -359,8 +359,8 @@ where |F : Type -> Type| is a (strictly positive) functor.
 
 \begin{frame}{Conclusions}
   \begin{itemize}
-  \item Generalised containers get us far
-  \item Defining categories is a problem
+  \item |catC|-containers get us far
+  \item Defining categories of algebras is problematic
   \end{itemize}
 
 \end{frame}
