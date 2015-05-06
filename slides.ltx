@@ -16,7 +16,7 @@
 
 %% Symbols and whatever
 \usepackage{amsmath,amsthm,amssymb,stmaryrd}
-
+\usepackage[normalem]{ulem}
 \usepackage{alltt}
 
 %% Layout stuff and other related goodies.
@@ -121,6 +121,8 @@ Ordinary inductive types:
 \begin{code}
   data T : Type where
     c  : F0 T + hdots + Fk T -> T
+    emptydots
+    empty
 \end{code}
 
 where every |Fi : Type -> Type| is a (strictly positive) functor.
@@ -131,20 +133,20 @@ Ordinary inductive types:
 \begin{code}
   data T : Type where
     c  : F T -> T
+    emptydots
+    empty
 \end{code}
 
 where |F : Type -> Type| is a (strictly positive) functor.
 \end{frame}
 
 \begin{frame}{\Hits versus \oits}
-  Higher inductive types:
+  Higher inductive types, \eg the circle:
 
   \begin{code}
-    data T2 : Type where
-      base : T2
-      p : base = base
-      q : base = base
-      t : p trans q = q trans p
+    data S1 : Type where
+      base : S1
+      loop : base = base
   \end{code}
 
   \begin{itemize}
@@ -160,8 +162,9 @@ where |F : Type -> Type| is a (strictly positive) functor.
   In general: constructors are \emph{dependent dialgebras}:
 
   \begin{code}
-    data T : Type
+    data T : Type where
       c0 : (x : F0 T)                     -> G0 T x
+      c1 : (x : F1 (T, c0))               -> G1 (T, c0) x
          vdots
       ck : (x : Fk (T, c0, hdots, ckmo))  -> Gk (T, c0, hdots, ckmo) x
   \end{code}
@@ -174,6 +177,35 @@ where |F : Type -> Type| is a (strictly positive) functor.
   \end{itemize}
 \end{frame}
 
+\begin{frame}{General framework -- example: \emph{interval}}
+  The interval type: 
+
+  \begin{code}
+    data I : Type where
+      zero : I
+      one : I
+      seg : zero = one
+  \end{code}
+
+  Argument functors:
+
+  \begin{code}
+    F0 : Type   -> Type  ; F0 X          ddefeq 1
+    F1 : F0Alg  -> Type  ; F1 (X, z)     ddefeq 1
+    F2 : F1Alg  -> Type  ; F2 (X, z, o)  ddefeq 1
+  \end{code}
+
+  Target functors:
+
+  \begin{code}
+    G0 : IntType  F0 -> Type  ; G0 (X          , x) ddefeq X
+    G1 : Int0     F1 -> Type  ; G1 ((X, z)     , x) ddefeq X
+    G2 : Int1     F2 -> Type  ; G2 ((X, z, o)  , x) ddefeq (z = o)
+  \end{code}
+
+\end{frame}
+
+
 \begin{frame}{General framework}
   Constructors are \emph{dependent dialgebras}:
 
@@ -184,9 +216,9 @@ where |F : Type -> Type| is a (strictly positive) functor.
   where 
 
   \begin{itemize}
-  \item |catC : Cat| with an adjunction |L dashv U : catC -> Type|
+  \item |catC : Cat| with a forgetful functor |U : catC -> Type|
   \item |F : catC -> Type|
-  \item |G : int catC F -> Type|
+  \item |G : IntC F -> Type|
   \end{itemize}
 
 \end{frame}
@@ -201,9 +233,9 @@ where |F : Type -> Type| is a (strictly positive) functor.
   where 
 
   \begin{itemize}
-  \item |C : Cat| with an adjunction |L dashv U : catC -> Type|
+  \item |C : Cat| with a forgetful functor |U : catC -> Type|
   \item |F : catC -> Type|
-  \item |G : int catC F -> Type|
+  \item |G : IntC F -> Type|
   \end{itemize}
 
   \begin{code}
@@ -223,9 +255,9 @@ where |F : Type -> Type| is a (strictly positive) functor.
   where 
 
   \begin{itemize}
-  \item |C : Cat| with an adjunction |L dashv U : catC -> Type|
+  \item |C : Cat| with a forgetful functor |U : catC -> Type|
   \item |F : catC -> Type|
-  \item |G : int catC F -> Type|
+  \item |G : IntC F -> Type|
   \end{itemize}
 
   \begin{code}
@@ -244,10 +276,10 @@ where |F : Type -> Type| is a (strictly positive) functor.
   where 
 
   \begin{itemize}
-  \item |C : Cat| with an adjunction |L dashv U : catC -> Type|
+  \item |C : Cat| with a forgetful functor |U : catC -> Type|
   \item |F : catC -> Type|
   \item |l r : F -> U|
-  \item |Eq0 : int catC F -> Type|
+  \item |Eq0 : IntC F -> Type|
   \end{itemize}
 
   \begin{code}
@@ -266,16 +298,16 @@ where |F : Type -> Type| is a (strictly positive) functor.
   where 
 
   \begin{itemize}
-  \item |C : Cat| with an adjunction |L dashv U : catC -> Type|
+  \item |C : Cat| with a forgetful functor |U : catC -> Type|
   \item |F : catC -> Type|
   \item |l0 r0 : F -> U|
-  \item |Eq0 : int catC F -> Type| \\
+  \item |Eq0 : IntC F -> Type| \\
         |Eq0 (X, x) ddefeq (l X x eqUX r X x)|
   \item |l1 r1 : 1 -> Eq0|
   \end{itemize}
 
   \begin{code}
-    Eq1 : int catC F -> Type
+    Eq1 : IntC F -> Type
     Eq1 (X, x) ddefeq (l1 X x eq0 r1 X x)
   \end{code}
 
@@ -292,7 +324,7 @@ where |F : Type -> Type| is a (strictly positive) functor.
     data Term : Type where
       lam : (Term -> Term) -> Term 
   \end{code}
-
+  
 \end{frame}
 
 \begin{frame}{Strict positivity -- \hits}
