@@ -61,6 +61,11 @@
 \newcommand{\twohits}{$2$-HITs\xspace}
 \newcommand{\twoconstructor}{$2$-constructor\xspace}
 \newcommand{\twoconstructors}{$2$-constructors\xspace}
+\newcommand{\threeconstructor}{$3$-constructor\xspace}
+\newcommand{\threeconstructors}{$3$-constructors\xspace}
+\newcommand{\nconstructor}{$n$-constructor\xspace}
+\newcommand{\nconstructors}{$n$-constructors\xspace}
+
 \newcommand{\ie}{i.e.\xspace}
 \newcommand{\eg}{e.g.\xspace}
 
@@ -145,8 +150,8 @@ where |F : Type -> Type| is a (strictly positive) functor.
 
   \begin{code}
     data S1 : Type where
-      base : S1
-      loop : base = base
+      base  : S1
+      loop  : base = base
   \end{code}
 
   \begin{itemize}
@@ -159,14 +164,14 @@ where |F : Type -> Type| is a (strictly positive) functor.
 \end{frame}
 
 \begin{frame}{General framework}
-  In general: constructors are \emph{dependent dialgebras}:
+  Constructors are \emph{dependent dialgebras}:
 
   \begin{code}
     data T : Type where
-      c0 : (x : F0 T)                     -> G0 T x
-      c1 : (x : F1 (T, c0))               -> G1 (T, c0) x
+      c0  : (x : F0 T)                     -> G0 (T, x)
+      c1  : (x : F1 (T, c0))               -> G1 ((T, c0), x)
          vdots
-      ck : (x : Fk (T, c0, hdots, ckmo))  -> Gk (T, c0, hdots, ckmo) x
+      ck  : (x : Fk (T, c0, hdots, ckmo))  -> Gk ((T, c0, hdots, ckmo), x)
   \end{code}
 
   We will call:
@@ -182,25 +187,27 @@ where |F : Type -> Type| is a (strictly positive) functor.
 
   \begin{code}
     data I : Type where
-      zero : I
-      one : I
-      seg : zero = one
+      zero  : I
+      one   : I
+      seg   : zero = one
   \end{code}
 
   Argument functors:
 
+  \savecolumns
   \begin{code}
-    F0 : Type   -> Type  ; F0 X          ddefeq 1
-    F1 : F0Alg  -> Type  ; F1 (X, z)     ddefeq 1
-    F2 : F1Alg  -> Type  ; F2 (X, z, o)  ddefeq 1
+    F0 X                 ddefeq 1        (F0  : Type   -> Type)
+    F1 (X, z)            ddefeq 1        (F1  : F0Alg  -> Type)
+    F2 (X, z, o)         ddefeq 1        (F2  : F1Alg  -> Type)
   \end{code}
 
   Target functors:
 
+  \restorecolumns
   \begin{code}
-    G0 : IntType  F0 -> Type  ; G0 (X          , x) ddefeq X
-    G1 : Int0     F1 -> Type  ; G1 ((X, z)     , x) ddefeq X
-    G2 : Int1     F2 -> Type  ; G2 ((X, z, o)  , x) ddefeq (z = o)
+    G0 (X          , x)  ddefeq X        (G0  : IntType  F0 -> Type)
+    G1 ((X, z)     , x)  ddefeq X        (G1  : Int0     F1 -> Type)
+    G2 ((X, z, o)  , x)  ddefeq (z = o)  (G2  : Int1     F2 -> Type)
   \end{code}
 
 \end{frame}
@@ -216,18 +223,18 @@ where |F : Type -> Type| is a (strictly positive) functor.
   where 
 
   \begin{itemize}
-  \item |catC : Cat| with a forgetful functor |U : catC -> Type|
-  \item |F : catC -> Type|
-  \item |G : IntC F -> Type|
+  \item |catC : Cat| 
+  \item |F : catC -> Type| (\emph{arguments} functor)
+  \item |G : IntC F -> Type| (\emph{target} functor)
   \end{itemize}
 
 \end{frame}
 
 \begin{frame}{General framework -- \zeroconstructors}
-  \zeroconstructors are \emph{dependent dialgebras}:
+  \zeroconstructors are of the form:
 
   \begin{code}
-    c : (x : F X) -> G (X, x)
+    c : (x : F X) -> U X
   \end{code}
 
   where 
@@ -239,17 +246,17 @@ where |F : Type -> Type| is a (strictly positive) functor.
   \end{itemize}
 
   \begin{code}
-    G (X, x) ddefeq X
+    G (X, x) ddefeq U X
   \end{code}
 
 
 \end{frame}
 
 \begin{frame}{General framework -- \oneconstructors}
-  \oneconstructors are \emph{dependent dialgebras}:
+  \oneconstructors are of the form:
 
   \begin{code}
-    c : (x : F X) -> hdots eqUX hdots
+    c : (x : F X) -> (l0 X x = r0 X x)
   \end{code}
 
   where 
@@ -258,33 +265,14 @@ where |F : Type -> Type| is a (strictly positive) functor.
   \item |C : Cat| with a forgetful functor |U : catC -> Type|
   \item |F : catC -> Type|
   \item |G : IntC F -> Type|
+  \item |l0 r0 : F -> U|
   \end{itemize}
 
   \begin{code}
-    G (X, x) ddefeq (hdots eqUX hdots)
+    G (X, x) ddefeq (l0 X x = r0 X x)
   \end{code}
 
-\end{frame}
-
-\begin{frame}{General framework -- \oneconstructors}
-  \oneconstructors are \emph{dependent dialgebras}:
-
-  \begin{code}
-    c : (x : F X) -> l X x eqUX r X x
-  \end{code}
-
-  where 
-
-  \begin{itemize}
-  \item |C : Cat| with a forgetful functor |U : catC -> Type|
-  \item |F : catC -> Type|
-  \item |l r : F -> U|
-  \item |Eq0 : IntC F -> Type|
-  \end{itemize}
-
-  \begin{code}
-    Eq0 (X, x) ddefeq (l X x eqUX r X x)
-  \end{code}
+  We call this functor |Eq0|
 
 \end{frame}
 
@@ -292,30 +280,53 @@ where |F : Type -> Type| is a (strictly positive) functor.
   For \twoconstructors:
 
   \begin{code}
-    c : (x : F X) -> l1 X x eq0 r1 X x
+    c : (x : F X) -> (l1 X x = r1 X x)
   \end{code}
 
   where 
 
   \begin{itemize}
-  \item |C : Cat| with a forgetful functor |U : catC -> Type|
-  \item |F : catC -> Type|
-  \item |l0 r0 : F -> U|
-  \item |Eq0 : IntC F -> Type| \\
-        |Eq0 (X, x) ddefeq (l X x eqUX r X x)|
-  \item |l1 r1 : 1 -> Eq0|
+  \item |l0 r0 : F -> U| \hfill (with |Eq0 (X, x) ddefeq (l0 X x = r0 X x)|) \hspace{2em}
+  \item |l1 r1 : 1 -> Eq0| \hfill (with |Eq1 (X, x) ddefeq (l1 X x = r1 X x)|) \hspace{2em}
   \end{itemize}
 
-  \begin{code}
-    Eq1 : IntC F -> Type
-    Eq1 (X, x) ddefeq (l1 X x eq0 r1 X x)
-  \end{code}
+\end{frame}
+
+\begin{frame}{General framework -- \threeconstructors}
+  For \threeconstructors:
 
   \begin{code}
-
+    c : (x : F X) -> (l2 X x = r2 X x)
   \end{code}
+
+  where 
+
+  \begin{itemize}
+  \item |l0 r0 : F -> U| \hfill (with |Eq0 (X, x) ddefeq (l0 X x = r0 X x)|) \hspace{2em}
+  \item |l1 r1 : 1 -> Eq0| \hfill (with |Eq1 (X, x) ddefeq (l1 X x = r1 X x)|) \hspace{2em}
+  \item |l2 r2 : 1 -> Eq1| \hfill (with |Eq2 (X, x) ddefeq (l2 X x = r2 X x)|) \hspace{2em}
+  \end{itemize}
 
 \end{frame}
+
+\begin{frame}{General framework -- \nconstructors}
+  For \nconstructors:
+
+  \begin{code}
+    c : (x : F X) -> (ln' X x = rn' X x)
+  \end{code}
+
+  where 
+
+  \begin{itemize}
+  \item |l0 r0 : F -> U| \hfill (with |Eq0 (X, x) ddefeq (l0 X x = r0 X x)|) \hspace{2em}
+  \item |l1 r1 : 1 -> Eq0| \hfill (with |Eq1 (X, x) ddefeq (l1 X x = r1 X x)|) \hspace{2em}
+  \item |l2 r2 : 1 -> Eq1| \hfill (with |Eq2 (X, x) ddefeq (l2 X x = r2 X x)|) \hspace{2em} \\ |vdots|
+  \item |ln' rn' : 1 -> Eqn''| \hfill (with |Eqn' (X, x) ddefeq (ln' X x = r'n X x)|) \hspace{2em}    
+  \end{itemize}
+
+\end{frame}
+
 
 \begin{frame}{Strict positivity -- \oits}
   We can't allow any arguments functor: it has to be strictly positive:
@@ -341,11 +352,11 @@ where |F : Type -> Type| is a (strictly positive) functor.
       vdots
   \end{code}
 
-  does not exist: |inv| is not strictly positive
+  |InitialField| does not exist: |inv| is not strictly positive
 \end{frame}
 
 
-\begin{frame}{Strict positivity -- |catC|-containers}
+\begin{frame}{|Type|-containers}
   Strictly positive functors |Type -> Type|: containers:
 
   \begin{itemize}
@@ -353,12 +364,26 @@ where |F : Type -> Type| is a (strictly positive) functor.
   \item Positions |T : S -> Type|
   \end{itemize}
 
-  |sem(S lhd P) : Type -> Type| \\
-  |sem(S lhd P) X ddefeq (s : S) times (P s -> X)|
+  \begin{code}
+  sem(S lhd P) : catC -> Type
+  sem(S lhd P) X ddefeq (s : S) times (P s -> X)
+
+
+  sem(S lhd P) : (f : X -> Y) -> sem(S lhd P) X -> sem(S lhd P) Y
+  sem(S lhd P) f (s , t) ddefeq (s , f circ t)
+  \end{code}
+
+  Example:
+
+  \begin{code}
+  const A X  = sem(A lhd (\ a . 0)) X 
+             = A times (0 -> X) 
+             = A 
+  \end{code}
   
 \end{frame}
 
-\begin{frame}{Strict positivity -- |catC|-containers}
+\begin{frame}{|catC|-containers}
   Strictly positive functors |catC -> Type|: |catC|-containers
 
   \begin{itemize}
@@ -366,19 +391,54 @@ where |F : Type -> Type| is a (strictly positive) functor.
   \item Positions |T : S -> / catC / |
   \end{itemize}
 
-  |sem(S lhd P) : catC -> Type| \\
-  |sem(S lhd P) X ddefeq (s : S) times C(P s, X)|
+  \begin{code}
+  sem(S lhd P) : catC -> Type
+  sem(S lhd P) X ddefeq (s : S) times catC(P s, X)
+
+
+  sem(S lhd P) : (f : catC(X , Y)) -> sem(S lhd P) X -> sem(S lhd P) Y
+  sem(S lhd P) f (s , t) ddefeq (s , f circ t)
+  \end{code}
+
+  Example:
+
+  \begin{code}
+  const A X  = sem(A lhd (\ a . 0)) X 
+             = A times catC(0 , X) -- assuming 0 : / catC / initial
+             = A
+  \end{code}
+
     
-  \begin{itemize}
-  \item Container morphisms: natural transformations
-  \end{itemize}
 \end{frame}
 
-\begin{frame}{Strict positivity -- |catC|-containers}
-  It is reasonable to require that the argument functors |Fi| be
-  containers.
+\begin{frame}{|catC|-container morphisms}
+  For any two containers |F = A lhd B|, |G = C lhd D|, container morphisms:
 
-  Are the |Eqi| functors expressible as containers?
+  \begin{code}
+                 (f : A -> C) times (g : (a : A) -> D (f a) -> B a)
+   white(simeq)  empty
+  \end{code}
+\end{frame}
+
+\begin{frame}{|catC|-container morphisms -- completeness}
+  For any two containers |F = A lhd B|, |G = C lhd D|, container morphisms:
+
+  \begin{code}
+          (f : A -> C) times (g : (a : A) -> D (f a) -> B a) 
+   simeq  [catC, Type](sem(F), sem(G))
+  \end{code}
+\end{frame}
+
+
+\begin{frame}{Strict positivity -- |catC|-containers}
+  Data for constructors can be given using |catC|-containers and
+  container morphisms:
+
+  \begin{itemize}
+  \item Arguments functors are given as |catC-|-containers
+  \item |Eqn| functors can be given as containers if we have
+    \nconstructors
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Coherence problems}
