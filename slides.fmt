@@ -73,8 +73,6 @@
 %format IntC = " \int_{\mathbb{C}} "
 %format circ = " \circ "
 %format simeq = " \simeq "
-%format	white(a)			= " {\color{white}  "  a  "  } " 
-%format	wit(a)			= " {\color{white}  "  a  "  } " 
 %format constA = " const_{A} "
 %format addunit = " +\mbox{-unit} "
 %format mulunit = " *\mbox{-unit} "
