@@ -63,8 +63,10 @@
 \newcommand{\twoconstructors}{$2$-constructors\xspace}
 \newcommand{\threeconstructor}{$3$-constructor\xspace}
 \newcommand{\threeconstructors}{$3$-constructors\xspace}
-\newcommand{\nconstructor}{$n$-constructor\xspace}
-\newcommand{\nconstructors}{$n$-constructors\xspace}
+\newcommand{\nconstructor}[1]{$#1$-constructor\xspace}
+\newcommand{\nconstructors}[1]{$#1$-constructors\xspace}
+\newcommand{\nhit}[1]{$#1$-HIT\xspace}
+\newcommand{\nhits}[1]{$#1$-HITs\xspace}
 
 \newcommand{\ie}{i.e.\xspace}
 \newcommand{\eg}{e.g.\xspace}
@@ -106,7 +108,14 @@
 \end{frame}
 
 \begin{frame}{Goal}
-  |hdots|
+  We want to:
+
+  \begin{itemize}
+  \item Define a general class of \hits
+  \item With introduction and elimination rules
+  \item Akin to W-types
+  \item Such that Shulman and Lumsdaine's semantics applies
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{\Hits versus \oits}
@@ -121,7 +130,7 @@ Ordinary inductive types:
 where every |Fi : Type -> Type| is a (strictly positive) functor.
 \end{frame}
 
-\begin{frame}{\Hits versus \oits}
+\begin{frame}[noframenumbering]{\Hits versus \oits}
 Ordinary inductive types:
 \begin{code}
   data T : Type where
@@ -133,7 +142,7 @@ Ordinary inductive types:
 where every |Fi : Type -> Type| is a (strictly positive) functor.
 \end{frame}
 
-\begin{frame}{\Hits versus \oits}
+\begin{frame}[noframenumbering]{\Hits versus \oits}
 Ordinary inductive types:
 \begin{code}
   data T : Type where
@@ -230,7 +239,7 @@ where |F : Type -> Type| is a (strictly positive) functor.
 
 \end{frame}
 
-\begin{frame}{General framework -- \zeroconstructors}
+\begin{frame}[t]{General framework -- \zeroconstructors}
   \zeroconstructors are of the form:
 
   \begin{code}
@@ -252,7 +261,7 @@ where |F : Type -> Type| is a (strictly positive) functor.
 
 \end{frame}
 
-\begin{frame}{General framework -- \oneconstructors}
+\begin{frame}[t]{General framework -- \oneconstructors}
   \oneconstructors are of the form:
 
   \begin{code}
@@ -276,7 +285,7 @@ where |F : Type -> Type| is a (strictly positive) functor.
 
 \end{frame}
 
-\begin{frame}{General framework -- \twoconstructors}
+\begin{frame}[t]{General framework -- \twoconstructors}
   For \twoconstructors:
 
   \begin{code}
@@ -292,7 +301,7 @@ where |F : Type -> Type| is a (strictly positive) functor.
 
 \end{frame}
 
-\begin{frame}{General framework -- \threeconstructors}
+\begin{frame}[t,noframenumbering]{General framework -- \threeconstructors}
   For \threeconstructors:
 
   \begin{code}
@@ -309,11 +318,11 @@ where |F : Type -> Type| is a (strictly positive) functor.
 
 \end{frame}
 
-\begin{frame}{General framework -- \nconstructors}
-  For \nconstructors:
+\begin{frame}[t,noframenumbering]{General framework -- \nconstructors{(n+1)}}
+  For \nconstructors{(n+1)}:
 
   \begin{code}
-    c : (x : F X) -> (ln' X x = rn' X x)
+    c : (x : F X) -> (ln X x = rn X x)
   \end{code}
 
   where 
@@ -322,7 +331,7 @@ where |F : Type -> Type| is a (strictly positive) functor.
   \item |l0 r0 : F -> U| \hfill (with |Eq0 (X, x) ddefeq (l0 X x = r0 X x)|) \hspace{2em}
   \item |l1 r1 : 1 -> Eq0| \hfill (with |Eq1 (X, x) ddefeq (l1 X x = r1 X x)|) \hspace{2em}
   \item |l2 r2 : 1 -> Eq1| \hfill (with |Eq2 (X, x) ddefeq (l2 X x = r2 X x)|) \hspace{2em} \\ |vdots|
-  \item |ln' rn' : 1 -> Eqn''| \hfill (with |Eqn' (X, x) ddefeq (ln' X x = r'n X x)|) \hspace{2em}    
+  \item |ln rn : 1 -> Eqn'| \hfill (with |Eqn (X, x) ddefeq (ln X x = rn X x)|) \hspace{2em}    
   \end{itemize}
 
 \end{frame}
@@ -343,12 +352,12 @@ where |F : Type -> Type| is a (strictly positive) functor.
 
   \begin{code}
     data InitialField : Type where
-      0  : InitialField
-      1  : InitialField
-      ADD  : InitialField -> InitialField -> InitialField
-      MUL  : InitialField -> InitialField -> InitialField
+      0        : InitialField
+      1        : InitialField
+      ADD      : InitialField -> InitialField -> InitialField
+      MUL      : InitialField -> InitialField -> InitialField
       vdots
-      inv : (x : InitialField) -> (x = 0 -> bot) -> InitialField
+      inv      : (x : InitialField) -> (x = 0 -> bot) -> InitialField
       vdots
   \end{code}
 
@@ -365,20 +374,21 @@ where |F : Type -> Type| is a (strictly positive) functor.
   \end{itemize}
 
   \begin{code}
-  sem(S lhd P) : catC -> Type
-  sem(S lhd P) X ddefeq (s : S) times (P s -> X)
+  sem0(S lhd P) : catC -> Type
+  sem0(S lhd P) X ddefeq (s : S) times (P s -> X)
+  \end{code}
 
-
-  sem(S lhd P) : (f : X -> Y) -> sem(S lhd P) X -> sem(S lhd P) Y
-  sem(S lhd P) f (s , t) ddefeq (s , f circ t)
+  \begin{code}
+  sem1(S lhd P) : (X -> Y) -> sem0(S lhd P) X -> sem0(S lhd P) Y
+  sem1(S lhd P) f (s , t) ddefeq (s , f circ t)
   \end{code}
 
   Example:
 
   \begin{code}
-  const A X  = sem(A lhd (\ a . 0)) X 
-             = A times (0 -> X) 
-             = A 
+  constA X  = sem0(A lhd (\ a . 0)) X 
+            = A times (0 -> X) 
+            = A 
   \end{code}
   
 \end{frame}
@@ -392,67 +402,128 @@ where |F : Type -> Type| is a (strictly positive) functor.
   \end{itemize}
 
   \begin{code}
-  sem(S lhd P) : catC -> Type
-  sem(S lhd P) X ddefeq (s : S) times catC(P s, X)
-
-
-  sem(S lhd P) : (f : catC(X , Y)) -> sem(S lhd P) X -> sem(S lhd P) Y
-  sem(S lhd P) f (s , t) ddefeq (s , f circ t)
+  sem0(S lhd P) : catC -> Type
+  sem0(S lhd P) X ddefeq (s : S) times catC(P s, X)
   \end{code}
-
-  Example:
 
   \begin{code}
-  const A X  = sem(A lhd (\ a . 0)) X 
-             = A times catC(0 , X) -- assuming 0 : / catC / initial
-             = A
+  sem1(S lhd P) : catC(X , Y) -> sem0(S lhd P) X -> sem0(S lhd P) Y
+  sem1(S lhd P) f (s , t) ddefeq (s , f circ t)
   \end{code}
 
+  Example (assuming |0 : / catC /| is initial):
+
+  \begin{code}
+  constA X  = sem0(A lhd (\ a . 0)) X 
+            = A times catC(0 , X)
+            = A
+  \end{code}
     
 \end{frame}
 
 \begin{frame}{|catC|-container morphisms}
-  For any two containers |F = A lhd B|, |G = C lhd D|, container morphisms:
+  \begin{itemize}
+  \item Data for higher constructors may require \emph{natural
+    transformations}
 
+  \item Natural transformations between containers: \emph{container
+      morphisms}:
+  \end{itemize}
+  For containers |A lhd B| and |C lhd D|, container morphisms are:
+
+  \savecolumns
   \begin{code}
-                 (f : A -> C) times (g : (a : A) -> D (f a) -> B a)
-   white(simeq)  empty
+          (f : A -> C) 
+   times  (g : (a : A) -> catC (D (f a), B a))
   \end{code}
+
+  Container morphisms are \emph{complete}:
+
+  \begin{itemize}
+  \item Each container morphism gives rise to a natural transformation
+    and vice versa
+  \end{itemize}
+
 \end{frame}
 
-\begin{frame}{|catC|-container morphisms -- completeness}
-  For any two containers |F = A lhd B|, |G = C lhd D|, container morphisms:
+% \begin{frame}[t]{|catC|-container morphisms -- completeness}
+%   For any two containers |F = A lhd B|, |G = C lhd D|, container morphisms:
 
-  \begin{code}
-          (f : A -> C) times (g : (a : A) -> D (f a) -> B a) 
-   simeq  [catC, Type](sem(F), sem(G))
-  \end{code}
-\end{frame}
+%   \restorecolumns
+%   \begin{code}
+%           (f : A -> C) 
+%    times  (g : (a : A) -> catC (D (f a), B a))
+%    simeq  [catC, Type](sem(F), sem(G))
+%   \end{code}
 
 
-\begin{frame}{Strict positivity -- |catC|-containers}
-  Data for constructors can be given using |catC|-containers and
+% \end{frame}
+
+
+\begin{frame}{Expressivity of containers}
+  Data for constructors can be given using containers and
   container morphisms:
 
   \begin{itemize}
-  \item Arguments functors are given as |catC-|-containers
+  \item Arguments functors are given as containers
+  \item Forgetful functors |Ui : FiAlg -> Type| can be given as
+    containers if there exist |Li dashv Ui|
+  \item Data for |Eqn| functors are given as container morphisms
   \item |Eqn| functors can be given as containers if we have
-    \nconstructors
+    \nhits{(n+1)}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Coherence problems}
+\begin{frame}{Simplified approach to \onehits}
+  In practice, constructor arguments rarely seem to refer to previous
+  constructors.
+
+  We can identify a class of \onehits where we have:
+
+  \begin{itemize}
+  \item \zeroconstructors which do not depend on another
+  \item \oneconstructors which may only depend on
+    \zeroconstructors \emph{in its targets}
+  \item No dependencies between the \oneconstructors
+  \end{itemize}
+
+  Examples: circle, suspension, propositional truncation
+
+  Non-example: hub-spokes version the torus
+\end{frame}
+
+\begin{frame}{Simplified approach to \onehits}
+  If we have:
+  \begin{itemize}
+  \item |F0 : Type -> Type| with |U0 : F0Alg -> Type|
+  \item |F1 : F0Alg -> Type| such that |F1 = F1' circ U0| 
+  \item |hdots| where |F1' : Type -> Type|
+  \end{itemize}
+  
+  then
+
+  \begin{code}
+    F1 -> U0 simeq F1' -> F0st
+  \end{code}
+
+  where |F0st| is the free monad of |F0|.
+
+  This approach has been fully formalised in Agda.
+\end{frame}
+
+\begin{frame}{Coherence}
   \begin{itemize}
   \item We can use |catC|-containers to internalise the theory
   \item We still need to be able to talk about the categories of dependent dialgebras
-  \item $\hdots$ but this comes with coherence problems
+  \item $\hdots$ but for this we need to be able to talk about strict equality \emph{internally}
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Conclusions}
   \begin{itemize}
-  \item |catC|-containers get us far
-  \item Defining categories of algebras is problematic
+  \item |catC|-containers allow us to formalise the data needed to define constructors
+  \item A Simplified approach to \onehits has been successfully formalised
+  \item In general we need to be able to talk about strict equality inside the type theory
   \end{itemize}
 
 \end{frame}
