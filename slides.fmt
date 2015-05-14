@@ -76,3 +76,6 @@
 %format constA = " const_{A} "
 %format addunit = " +\mbox{-unit} "
 %format mulunit = " *\mbox{-unit} "
+%format eqT2 = " =_{T^2} "
+%format eqBase = " =_{base = base} "
+%format eqS1 = " =_{S^1} "

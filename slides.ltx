@@ -19,6 +19,9 @@
 \usepackage[normalem]{ulem}
 \usepackage{alltt}
 
+\usepackage{tikz}
+\usetikzlibrary{shapes.callouts}
+
 %% Layout stuff and other related goodies.
 \usepackage[parfill]{parskip}
 \usepackage{xspace}
@@ -114,7 +117,7 @@
   \item Define a general class of \hits
   \item With introduction and elimination rules
   \item Akin to W-types
-  \item Such that Shulman and Lumsdaine's semantics applies
+  \item Building upon Shulman and Lumsdaine's semantics
   \end{itemize}
 \end{frame}
 
@@ -160,7 +163,29 @@ where |F : Type -> Type| is a (strictly positive) functor.
   \begin{code}
     data S1 : Type where
       base  : S1
-      loop  : base = base
+      loop  : base eqS1 base
+      empty
+      empty
+  \end{code}
+
+  \begin{itemize}
+  \item Dependencies on previous constructors
+  \item \emph{Higher} constructors: target of constructors not always
+    |T|, but can also be an iterated path space of |T|.
+  \end{itemize}
+
+  Single functor |Type -> Type| no longer suffices
+\end{frame}
+
+\begin{frame}[noframenumbering]{\Hits versus \oits}
+  Higher inductive types, \eg the torus:
+
+  \begin{code}
+    data T2 : Type where
+      base  : T2
+      p     : base eqT2 base
+      q     : base eqT2 base
+      t     : p trans q eqBase q trans p
   \end{code}
 
   \begin{itemize}
@@ -213,6 +238,7 @@ where |F : Type -> Type| is a (strictly positive) functor.
   Target functors:
 
   \restorecolumns
+  
   \begin{code}
     G0 (X          , x)  ddefeq X        (G0  : IntType  F0 -> Type)
     G1 ((X, z)     , x)  ddefeq X        (G1  : Int0     F1 -> Type)
@@ -249,7 +275,7 @@ where |F : Type -> Type| is a (strictly positive) functor.
   where 
 
   \begin{itemize}
-  \item |C : Cat| with a forgetful functor |U : catC -> Type|
+  \item |catC : Cat| with a forgetful functor |U : catC -> Type|
   \item |F : catC -> Type|
   \item |G : IntC F -> Type|
   \end{itemize}
@@ -426,18 +452,18 @@ where |F : Type -> Type| is a (strictly positive) functor.
 
 \begin{frame}{|catC|-container morphisms}
   \begin{itemize}
-  \item Data for higher constructors may require \emph{natural
-    transformations}
+  \item Data for higher constructors requires \emph{natural
+      transformations}
 
   \item Natural transformations between containers: \emph{container
       morphisms}:
   \end{itemize}
-  For containers |A lhd B| and |C lhd D|, container morphisms are:
+  For containers |S lhd P| and |T lhd Q|, container morphisms are:
 
   \savecolumns
   \begin{code}
-          (f : A -> C) 
-   times  (g : (a : A) -> catC (D (f a), B a))
+          (f : S -> T) 
+   times  (g : (a : S) -> catC (Q (f a), P a))
   \end{code}
 
   Container morphisms are \emph{complete}:
@@ -492,7 +518,7 @@ where |F : Type -> Type| is a (strictly positive) functor.
 
   Examples: circle, suspension, propositional truncation
 
-  Non-example: hub-spokes version the torus
+  Non-example: hub-spokes version of the torus
 \end{frame}
 
 \begin{frame}{Simplified approach to \onehits}
@@ -524,6 +550,7 @@ where |F : Type -> Type| is a (strictly positive) functor.
 
 \begin{frame}{Conclusions}
   \begin{itemize}
+  \item \Hits are sequences of dependent dialgebras
   \item |catC|-containers allow us to formalise the data needed to define constructors
   \item A Simplified approach to \onehits has been successfully formalised
   \item In general we need to be able to talk about strict equality inside the type theory
