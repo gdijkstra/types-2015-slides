@@ -101,7 +101,7 @@
   \inst{2} University of Strathclyde
  }
 
-\date{\today}
+\date{May 20th, 2015}
 
 \begin{document}
 
@@ -111,11 +111,11 @@
 \end{frame}
 
 \begin{frame}{Goal}
-  We want to:
+  Our is goal is to:
 
   \begin{itemize}
   \item Define a general class of \hits
-  \item With introduction and elimination rules
+
   \item Akin to W-types
   \item Building upon Shulman and Lumsdaine's semantics
   \end{itemize}
@@ -164,8 +164,6 @@ where |F : Type -> Type| is a (strictly positive) functor.
     data S1 : Type where
       base  : S1
       loop  : base eqS1 base
-      empty
-      empty
   \end{code}
 
   \begin{itemize}
@@ -178,14 +176,12 @@ where |F : Type -> Type| is a (strictly positive) functor.
 \end{frame}
 
 \begin{frame}[noframenumbering]{\Hits versus \oits}
-  Higher inductive types, \eg the torus:
+  Higher inductive types, \eg propositional truncation:
 
   \begin{code}
-    data T2 : Type where
-      base  : T2
-      p     : base eqT2 base
-      q     : base eqT2 base
-      t     : p trans q eqBase q trans p
+    data  // A // : Type where
+     [_] : A -> // A //
+     trunc : (x y : // A //) -> x = y
   \end{code}
 
   \begin{itemize}
@@ -211,7 +207,7 @@ where |F : Type -> Type| is a (strictly positive) functor.
   We will call:
 
   \begin{itemize}
-  \item Every |Fi| an \emph{arguments} functor
+  \item Every |Fi| an \emph{argument} functor
   \item Every |Gi| a \emph{target} functor
   \end{itemize}
 \end{frame}
@@ -240,13 +236,17 @@ where |F : Type -> Type| is a (strictly positive) functor.
   \restorecolumns
   
   \begin{code}
-    G0 (X          , x)  ddefeq X        (G0  : IntType  F0 -> Type)
-    G1 ((X, z)     , x)  ddefeq X        (G1  : Int0     F1 -> Type)
-    G2 ((X, z, o)  , x)  ddefeq (z = o)  (G2  : Int1     F2 -> Type)
+    G0 (X          , x)  ddefeq X        (G0  : IntTypeTag   F0 -> Type)
+    G1 ((X, z)     , x)  ddefeq X        (G1  : Int0         F1 -> Type)
+    G2 ((X, z, o)  , x)  ddefeq (z = o)  (G2  : Int1         F2 -> Type)
   \end{code}
 
-\end{frame}
+  \begin{tikzpicture}[remember picture,overlay]
+    \path<2> (a.east) ++(3,5) node[align=center,anchor=east,rectangle callout,fill=red!50,opacity=1, callout absolute pointer={(a.mid)}]  {\emph{Category of elements}: \\objects:\\ |(X : Type) times F0 X|\\morphisms |(X,x) -> (Y,y)|:\\ |(f : X -> Y) times (F0 f x = y)|};
+  \end{tikzpicture}
 
+
+\end{frame}
 
 \begin{frame}{General framework}
   Constructors are \emph{dependent dialgebras}:
@@ -259,7 +259,7 @@ where |F : Type -> Type| is a (strictly positive) functor.
 
   \begin{itemize}
   \item |catC : Cat| 
-  \item |F : catC -> Type| (\emph{arguments} functor)
+  \item |F : catC -> Type| (\emph{argument} functor)
   \item |G : IntC F -> Type| (\emph{target} functor)
   \end{itemize}
 
@@ -307,7 +307,7 @@ where |F : Type -> Type| is a (strictly positive) functor.
     G (X, x) ddefeq (l0 X x = r0 X x)
   \end{code}
 
-  We call this functor |Eq0|
+  We call this |G| functor |Eq0|
 
 \end{frame}
 
@@ -321,7 +321,7 @@ where |F : Type -> Type| is a (strictly positive) functor.
   where 
 
   \begin{itemize}
-  \item |l0 r0 : F -> U| \hfill (with |Eq0 (X, x) ddefeq (l0 X x = r0 X x)|) \hspace{2em}
+  \item |l0 r0 : F -> U| \hfill (with |Eq0  (X, x) ddefeq (l0 X x = r0 X x)|) \hspace{2em}
   \item |l1 r1 : 1 -> Eq0| \hfill (with |Eq1 (X, x) ddefeq (l1 X x = r1 X x)|) \hspace{2em}
   \end{itemize}
 
@@ -367,7 +367,7 @@ where |F : Type -> Type| is a (strictly positive) functor.
 
 
 \begin{frame}{Strict positivity -- \oits}
-  We can't allow any arguments functor: it has to be strictly positive:
+  We can't allow any argument functor: it has to be strictly positive:
 
   \begin{code}
     data Term : Type where
@@ -377,7 +377,7 @@ where |F : Type -> Type| is a (strictly positive) functor.
 \end{frame}
 
 \begin{frame}{Strict positivity -- \hits}
-  We can't allow any arguments functor: it has to be strictly positive:
+  We can't allow any argument functor: it has to be strictly positive:
 
   \begin{code}
     data InitialField : Type where
@@ -395,7 +395,7 @@ where |F : Type -> Type| is a (strictly positive) functor.
 
 
 \begin{frame}{|Type|-containers}
-  Strictly positive functors |Type -> Type|: containers:
+  Strictly positive functors |Type -> Type|: containers
 
   \begin{itemize}
   \item Shapes |S : Type|
@@ -423,7 +423,7 @@ where |F : Type -> Type| is a (strictly positive) functor.
 \end{frame}
 
 \begin{frame}{|catC|-containers}
-  Strictly positive functors |catC -> Type|: |catC|-containers
+  Strictly positive functors |catC -> Type|: |catC|-containers (or \emph{familially representable})
 
   \begin{itemize}
   \item Shapes |S : Type|
@@ -494,7 +494,7 @@ where |F : Type -> Type| is a (strictly positive) functor.
   container morphisms:
 
   \begin{itemize}
-  \item Arguments functors are given as containers
+  \item Argument functors are given as containers
   \item Forgetful functors |Ui : FiAlg -> Type| can be given as
     containers if there exist |Li dashv Ui|
   \item Data for |Eqn| functors are given as container morphisms
@@ -510,13 +510,13 @@ where |F : Type -> Type| is a (strictly positive) functor.
   We can identify a class of \onehits where we have:
 
   \begin{itemize}
-  \item \zeroconstructors which do not depend on another
+  \item \zeroconstructors which do not depend on other constructors
   \item \oneconstructors which may only depend on
-    \zeroconstructors \emph{in its targets}
+    \zeroconstructors \emph{in the targets}
   \item No dependencies between the \oneconstructors
   \end{itemize}
 
-  Examples: circle, suspension, propositional truncation
+  Examples: circle, suspension, truncation
 
   Non-example: hub-spokes version of the torus
 \end{frame}
@@ -544,7 +544,43 @@ where |F : Type -> Type| is a (strictly positive) functor.
   \begin{itemize}
   \item We can use |catC|-containers to internalise the theory
   \item We still need to be able to talk about the categories of dependent dialgebras
-  \item $\hdots$ but for this we need to be able to talk about strict equality \emph{internally}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Coherence -- Category of dependent dialgebras}
+  Given |catC| a category with functors |F : catC -> Type| and |G :
+  IntC F -> Type|, we can consider the category of dialgebras |FAlg|:
+
+  \begin{itemize}
+  \item objects: \\
+    \begin{code}
+             (X : / catC /) 
+      times  (theta : (x : F X) -> G (X, x))
+    \end{code}
+
+  \item morphisms |(X, theta) -> (Y, rho)|: 
+    \begin{code}
+             (f : catC(X,Y)) 
+      times  (comm : (x : F X) -> G (f, refl) (theta x) = rho (F f x))
+    \end{code}
+
+  \end{itemize}
+  
+\end{frame}
+
+\begin{frame}{Coherence}
+  \begin{itemize}
+  \item We can use |catC|-containers to internalise the theory
+  \item We still need to be able to talk about the categories of dependent dialgebras
+  \end{itemize}
+
+  Design choices:
+  \begin{itemize}
+  \item Define the categories with \emph{strict} equality and possibly
+    lose some expressivity (\eg the torus)
+  \item Work with appropriately defined $(\infty, 1)$-categories and
+    deal with the coherence issues, that increase with the number of
+    constructors
   \end{itemize}
 \end{frame}
 
@@ -552,10 +588,13 @@ where |F : Type -> Type| is a (strictly positive) functor.
   \begin{itemize}
   \item \Hits are sequences of dependent dialgebras
   \item |catC|-containers allow us to formalise the data needed to define constructors
-  \item A Simplified approach to \onehits has been successfully formalised
-  \item In general we need to be able to talk about strict equality inside the type theory
+  \item A simplified approach to \onehits has been successfully formalised
+  \item Coherence problems increase with the number of constructors
+  \item We can work in a type theory with strict equality and avoid
+    coherence problems but we lose some expressivity
   \end{itemize}
 
 \end{frame}
+
 
 \end{document}
